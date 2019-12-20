@@ -1,8 +1,9 @@
-// initialize our map
+// initialize map
 var access_token = 'access_token=pk.eyJ1IjoiYW5kcm9pZHBpdGkiLCJhIjoiY2lvd3VwamhmMDA4MHZ0a2p0OGJnYnRhNSJ9.fITbznDvS6FhARaYxrW_Pw#10';
 var map = L.map('map', {
     'center': [52.5200066, 13.404954],
-    'zoom': 12,
+    'zoom': 5,
+    'timeDimension': true,
     'layers': [
         L.tileLayer('https://api.mapbox.com/styles/v1/androidpiti/ck2j9fns70ul51cpn8rqnmqb1/tiles/256/{z}/{x}/{y}?' + access_token, {
             'attribution': '© <a href="https://apps.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -10,28 +11,62 @@ var map = L.map('map', {
     ]
 });
 
-// custom icon
-var gloveIcon = L.icon({
-    iconSize: [28, 45],
-    iconAnchor: [12, 41],
-    popupAnchor: [-6, -41],
-    iconUrl: 'https://magnesia-berlin.de/extra/lonely-gloves/icon/marker-violet.png',
-    shadowUrl: 'https://magnesia-berlin.de/extra/lonely-gloves/icon/marker-shadow.png'
+// player instance with TimeDimension and some options
+var player = new L.TimeDimension.Player({
+    transitionTime: 1000,
+    loop: true,
+    startOver: false
 });
 
-// set pop up windows
-function onEachFeature(feature, layer) {
-    layer.bindPopup("<img alt='image glove' text-align='justify' width='100px' src='" +
-        layer.feature.properties.imageurl + "'/> <br>" + layer.feature.properties.name + "<br>" + layer.feature.properties.description, { 'className': 'custom' });
-}
+// options for slider control
+var timeDimensionControlOptions = {
+    player: player,
+    title: "Flight from Berlin to Zagreb",
+    loopButton: true,
+    speedSlider: false,
+    timeDimension: timeDimension,
+    position: 'topright',
+    autoPlay: true,
+    timeSliderDragUpdate: true
+};
 
-// add data to map
-var layerGloves = new L.geoJson(gloves, {
-    pointToLayer: function(feature, latlng) {
-        return L.marker(latlng, {
-            icon: gloveIcon
-        });
-    },
-    onEachFeature: onEachFeature
-}).addTo(map);
-map.fitBounds(layerGloves.getBounds());
+// add slider to map
+var timeDimensionControl = new L.Control.TimeDimension(timeDimensionControlOptions);
+map.addControl(timeDimensionControl);
+
+// custom icon for flight  
+var iconPlane = L.icon({
+    iconUrl: 'icon/flight_white.png',
+    iconAnchor: [12, 12],
+    popupAnchor: [-3, -76],
+    iconSize: [30, 30]
+});
+
+// ...
+var customLayer = L.geoJson(null, {
+    pointToLayer: function (feature, latLng) {
+        if (feature.properties.hasOwnProperty('last')) {
+            return new L.Marker(latLng, {
+                icon: iconPlane
+            });
+        }
+        return L.circleMarker(latLng);
+    }
+});
+
+// ... 
+var gpxLayer = omnivore.gpx('data/BER-ZAG_2019-NOV.gpx', null, customLayer).on('ready', function () {
+    map.fitBounds(gpxLayer.getBounds(), {
+        paddingBottomRight: [40, 40]
+    });
+});
+
+var gpxTimeLayer = L.timeDimension.layer.geoJson(gpxLayer, {
+    updateTimeDimension: true,
+    duration: 'PT2M',
+    addlastPoint: true,
+    waitForReady: true
+});
+
+// add flight to map
+gpxTimeLayer.addTo(map);
