@@ -1,37 +1,37 @@
-html,
-body,
-#map {
-    width: 100%;
-    height: 100%;
-    margin: 0px;
-    padding:0; 
+html, body, #map {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0;
 }
 
-.custom .leaflet-popup-tip,
-.custom .leaflet-popup-content-wrapper {
-    max-width: 400px;
-    width: auto;
-    text-align: center;
-    background: #585353cb;
-    color: #ffffff;
-}
-
-.timecontrol,
-.leaflet-bar-timecontrol,
-.leaflet-control-timecontrol{
-  border: 1 px solid #000000;
-  background-color: #585353cb;
-  color: rgb(255, 255, 255);
-}
-.leaflet-control-zoom a{
-   box-shadow: 0 1px 5px rgba(0,0,0,0.65); 
-}
-.leaflet-bar a{
+/* s´Styles for timecontrol */
+a.leaflet-control-timecontrol.timecontrol-backward,
+a.leaflet-control-timecontrol.timecontrol-play,
+a.leaflet-control-timecontrol.timecontrol-pause,
+a.leaflet-control-timecontrol.timecontrol-forward,
+a.leaflet-control-timecontrol.timecontrol-loop,
+a.leaflet-control-timecontrol.timecontrol-date,
+.leaflet-touch .timecontrol-slider, .slider,
+.leaflet-bar, .leaflet-bar-horizontal, .leaflet-bar-timecontrol, .leaflet-control {
   border-radius: 4px;
   background-color: #585353cb;
   border: 1px solid #585353cb;
   color: rgb(255, 255, 255);
 }
-.leaflet-bar a:last-child{
-  border: 1px solid rgba(0,0,0,.15);
+
+ /* s´Styles for zoom buttons */
+.leaflet-control-zoom a {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+}
+
+.leaflet-bar a {
+  border-radius: 4px;
+  background-color: #585353cb;
+  border: 1px solid #585353cb;
+  color: rgb(255, 255, 255);
+}
+
+.leaflet-bar a:last-child {
+  border: 1px solid rgba(0, 0, 0, .15);
 }

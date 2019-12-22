@@ -11,14 +11,20 @@ var map = L.map('map', {
     ]
 });
 
+// start of TimeDimension manual instantiation
+var timeDimension = new L.TimeDimension({
+    period: "PT2M"
+});
+map.timeDimension = timeDimension; 
+
 // player instance with TimeDimension and some options
 var player = new L.TimeDimension.Player({
     transitionTime: 1000,
     loop: true,
     startOver: false
-});
+}, timeDimension);
 
-// options for slider control
+// options slider control
 var timeDimensionControlOptions = {
     player: player,
     title: "Flight from Berlin to Zagreb",
@@ -27,7 +33,8 @@ var timeDimensionControlOptions = {
     timeDimension: timeDimension,
     position: 'topright',
     autoPlay: true,
-    timeSliderDragUpdate: true
+    timeSliderDragUpdate: true,
+    timeZones: ["Local"]
 };
 
 // add slider to map
@@ -42,7 +49,7 @@ var iconPlane = L.icon({
     iconSize: [30, 30]
 });
 
-// ...
+// creat customLayer for geoJSON
 var customLayer = L.geoJson(null, {
     pointToLayer: function (feature, latLng) {
         if (feature.properties.hasOwnProperty('last')) {
@@ -54,7 +61,7 @@ var customLayer = L.geoJson(null, {
     }
 });
 
-// ... 
+// load gpx-file with leaflet-omnivore and assign to customLayer 
 var gpxLayer = omnivore.gpx('data/BER-ZAG_2019-NOV.gpx', null, customLayer).on('ready', function () {
     map.fitBounds(gpxLayer.getBounds(), {
         paddingBottomRight: [40, 40]
@@ -63,10 +70,12 @@ var gpxLayer = omnivore.gpx('data/BER-ZAG_2019-NOV.gpx', null, customLayer).on('
 
 var gpxTimeLayer = L.timeDimension.layer.geoJson(gpxLayer, {
     updateTimeDimension: true,
-    duration: 'PT2M',
     addlastPoint: true,
     waitForReady: true
 });
+
+// set pop up windows
+gpxTimeLayer.bindPopup("sadfdsf");
 
 // add flight to map
 gpxTimeLayer.addTo(map);
