@@ -13,7 +13,7 @@ var map = L.map('map', {
 
 // start of TimeDimension manual instantiation
 var timeDimension = new L.TimeDimension({
-    period: "PT2M"
+    period: "PT1M"
 });
 map.timeDimension = timeDimension; 
 
@@ -24,7 +24,7 @@ var player = new L.TimeDimension.Player({
     startOver: false
 }, timeDimension);
 
-// options slider control
+// options player control
 var timeDimensionControlOptions = {
     player: player,
     title: "Flight from Berlin to Zagreb",
@@ -37,7 +37,7 @@ var timeDimensionControlOptions = {
     timeZones: ["Local"]
 };
 
-// add slider to map
+// add player control to map
 var timeDimensionControl = new L.Control.TimeDimension(timeDimensionControlOptions);
 map.addControl(timeDimensionControl);
 
@@ -74,8 +74,12 @@ var gpxTimeLayer = L.timeDimension.layer.geoJson(gpxLayer, {
     waitForReady: true
 });
 
-// set pop up windows
-gpxTimeLayer.bindPopup("sadfdsf");
-
 // add flight to map
 gpxTimeLayer.addTo(map);
+
+// creat graph and add
+var div = document.createElement("div");
+div.style.height = "100px";
+div.innerHTML = "Hello";
+// console.log(customLayer);
+document.getElementById("graph").appendChild(div);
