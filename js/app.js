@@ -15,11 +15,11 @@ var map = L.map('map', {
 var timeDimension = new L.TimeDimension({
     period: "PT1M"
 });
-map.timeDimension = timeDimension; 
+map.timeDimension = timeDimension;
 
 // player instance with TimeDimension and some options
 var player = new L.TimeDimension.Player({
-    transitionTime: 1000,
+    transitionTime: 200,
     loop: true,
     startOver: false
 }, timeDimension);
@@ -68,6 +68,7 @@ var gpxLayer = omnivore.gpx('data/BER-ZAG_2019-NOV.gpx', null, customLayer).on('
     });
 });
 
+// add gpx-layer to time layer with some options
 var gpxTimeLayer = L.timeDimension.layer.geoJson(gpxLayer, {
     updateTimeDimension: true,
     addlastPoint: true,
@@ -76,10 +77,3 @@ var gpxTimeLayer = L.timeDimension.layer.geoJson(gpxLayer, {
 
 // add flight to map
 gpxTimeLayer.addTo(map);
-
-// creat graph and add
-var div = document.createElement("div");
-div.style.height = "100px";
-div.innerHTML = "Hello";
-// console.log(customLayer);
-document.getElementById("graph").appendChild(div);

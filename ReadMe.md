@@ -1,8 +1,8 @@
 Tow files: 
 * Flight Berlin to Zagreb
-* and Zagreb to Praha
 
 Used PlugIns: 
 
-* leaflet-timedimension (+ iso8601-js-period)
-* leaflet-omnivore
+* [Leaflet.TimeDimension](https://github.com/socib/Leaflet.TimeDimension) (+ iso8601-js-period)
+* [leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore)
+* [Leaflet.Elevation](https://github.com/MrMufflon/Leaflet.Elevation)
