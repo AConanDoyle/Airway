@@ -27,7 +27,7 @@ var player = new L.TimeDimension.Player({
 // options player control
 var timeDimensionControlOptions = {
     player: player,
-    title: "Flight from Berlin to Zagreb",
+    title: "Airways",
     loopButton: true,
     speedSlider: false,
     timeDimension: timeDimension,
@@ -49,8 +49,8 @@ var iconPlane = L.icon({
     iconSize: [30, 30]
 });
 
-// creat customLayer for geoJSON
-var customLayer = L.geoJson(null, {
+// creat custom geoJSON Layer for BER to ZAG
+var gjsonLayerBERZAG = L.geoJson(null, {
     pointToLayer: function (feature, latLng) {
         if (feature.properties.hasOwnProperty('last')) {
             return new L.Marker(latLng, {
@@ -61,19 +61,46 @@ var customLayer = L.geoJson(null, {
     }
 });
 
-// load gpx-file with leaflet-omnivore and assign to customLayer 
-var gpxLayer = omnivore.gpx('data/BER-ZAG_2019-NOV.gpx', null, customLayer).on('ready', function () {
-    map.fitBounds(gpxLayer.getBounds(), {
+// and ZAG to PRA
+var gjsonLayerZAGPRA = L.geoJson(null, {
+    pointToLayer: function (feature, latLng) {
+        if (feature.properties.hasOwnProperty('last')) {
+            return new L.Marker(latLng, {
+                icon: iconPlane
+            });
+        }
+        return L.circleMarker(latLng);
+    }
+});
+
+// load gpx-file with leaflet-omnivore and assign to customLayer
+// Berlin to Zagreb
+var gpxBER_ZAG = omnivore.gpx('data/BER-ZAG_2019-NOV.gpx', null, gjsonLayerBERZAG).on('ready', function () {
+    map.fitBounds(gpxBER_ZAG.getBounds(), {
         paddingBottomRight: [40, 40]
     });
 });
 
 // add gpx-layer to time layer with some options
-var gpxTimeLayer = L.timeDimension.layer.geoJson(gpxLayer, {
+var gpxTimeBer_ZAG = L.timeDimension.layer.geoJson(gpxBER_ZAG, {
     updateTimeDimension: true,
     addlastPoint: true,
     waitForReady: true
 });
 
+// add gpx-layer to time layer with some options, Zagreb to Prague
+var gpxTimeZAG_PRA = L.timeDimension.layer.geoJson(omnivore.gpx('data/ZAG-PRA_2019-APR.gpx', null, gjsonLayerZAGPRA), {
+    updateTimeDimension: true,
+    addlastPoint: true,
+    waitForReady: true
+});
+
+var overlayAirways = {
+    "Berlin to Zagreb": gpxTimeBer_ZAG,
+    "Zagreb to Prague": gpxTimeZAG_PRA,
+};
+
 // add flight to map
-gpxTimeLayer.addTo(map);
+// var baseLayers = getCommonBaseLayers(map); // see baselayers.js
+L.control.layers(overlayAirways, null).addTo(map);
+gpxTimeBer_ZAG.addTo(map);
